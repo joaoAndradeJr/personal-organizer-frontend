@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 
 function Home() {
   const [inputTaskValue, setInputTaskValue] = useState('');
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
 
-  }, [inputTaskValue]);
+  }, [inputTaskValue, tasks]);
 
   const handleClick = (target) => {
     const { id } = target;
     console.log(id)
-    console.log(inputTaskValue)
+    setTasks([...tasks, inputTaskValue]);
   }
 
   return (
@@ -45,7 +46,9 @@ function Home() {
         </button>
       </section>
       <section>
-        <ul id="tasks"></ul>
+        <ul id="tasks">
+          { tasks.map((task, index) => <li key={index}>{task}</li>) }
+        </ul>
       </section>
     </>
   );
