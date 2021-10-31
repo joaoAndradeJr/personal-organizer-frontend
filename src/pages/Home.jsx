@@ -5,7 +5,7 @@ function Home() {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
+  const getTasks = async () => {
     setIsLoading(true);
     fetch('http://localhost:3001/')
       .then(resp => resp.json())
@@ -13,13 +13,25 @@ function Home() {
         setTasks(data);
         setIsLoading(false);
       });
-  }, [inputTask]);
+  };
 
-  const addTask = () => {
-    // setTasks([...tasks, inputTask]);
-    // setInputTask('');
-    // console.log(inputTask)
-  }
+  useEffect(() => {
+    getTasks();
+  }, [], [inputTask]);
+
+  const addTask = async () => {
+    await fetch('http://localhost:3001/', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        task: inputTask,
+      }),
+    });
+    getTasks();
+  };
 
   const removeTask = (id) => {
     console.log('remove tafera ', id)
@@ -53,8 +65,8 @@ function Home() {
           </section>
           <section>
             <ul>
-              { tasks.map((e, index) => (
-                <div key={index}>
+              { tasks.map((e) => (
+                <div key={e._id}>
                   <li>{e.task}</li>
                   <button
                     type="button"
