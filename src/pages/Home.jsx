@@ -33,8 +33,15 @@ function Home() {
     getTasks();
   };
 
-  const removeTask = (id) => {
-    console.log('remove tafera ', id)
+  const removeTask = async (id) => {
+    await fetch(`http://localhost:3001/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    getTasks();
   };
 
   const editTask = (id) => {
