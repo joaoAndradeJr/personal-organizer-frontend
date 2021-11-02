@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 function Home() {
+  const PENDING = 'pending';
+  const IN_PROGRESS = 'in_progress';
+  const DONE = 'done';
   const [inputTask, setInputTask] = useState('');
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [taskStatus, setTaskStatus] = useState(PENDING)
 
   const getTasks = async () => {
     setIsLoading(true);
@@ -50,6 +54,7 @@ function Home() {
 
   return (
     <div>
+      { console.log(taskStatus)}
       { isLoading ? <h3>Loading...</h3>
       : 
         <>
@@ -62,6 +67,11 @@ function Home() {
                 onChange={(e) => setInputTask(e.target.value)}
               />
             </label>
+            <select id="task-status" value={taskStatus} onChange={(e) => setTaskStatus(e.target.value)}>
+              <option value={PENDING}>Pendente</option>
+              <option value={IN_PROGRESS}>Em Andamento</option>
+              <option value={DONE}>Pronto</option>
+            </select>
             <button
               type="button"
               id="add-task-button"
