@@ -24,6 +24,7 @@ function Home() {
   }, [], [inputTask, taskStatus]);
 
   const addTask = async () => {
+    setIsLoading(true);
     await fetch('http://localhost:3001/', {
       method: 'POST',
       headers: {
@@ -35,10 +36,12 @@ function Home() {
         status: taskStatus,
       }),
     });
+    setIsLoading(false);
     getTasks();
   };
 
   const removeTask = async (id) => {
+    setIsLoading(true);
     await fetch(`http://localhost:3001/${id}`, {
       method: 'DELETE',
       headers: {
@@ -46,6 +49,7 @@ function Home() {
         'Content-Type': 'application/json',
       },
     });
+    setIsLoading(false);
     getTasks();
   };
 
@@ -87,7 +91,7 @@ function Home() {
                   <div key={e._id}>
                     <li>
                       {e.task}
-                      <p>{e.status}</p>
+                      <p><i>{e.status}</i></p>
                     </li>
                     <button
                       type="button"
