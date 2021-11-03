@@ -43,7 +43,7 @@ function Home() {
 
   const removeTask = async (id) => {
     setIsLoading(true);
-    await fetch(`bdUrl/${id}`, {
+    await fetch(`https://personaltaskslist-bk.herokuapp.com/${id}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
