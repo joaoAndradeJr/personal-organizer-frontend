@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
 function Home() {
-  const PENDING = 'pending';
-  const IN_PROGRESS = 'in_progress';
-  const DONE = 'done';
+  const PENDING = 'Pendente';
+  const IN_PROGRESS = 'Em Progresso';
+  const DONE = 'Pronto';
   const [inputTask, setInputTask] = useState('');
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,7 @@ function Home() {
 
   useEffect(() => {
     getTasks();
-  }, [], [inputTask]);
+  }, [], [inputTask, taskStatus]);
 
   const addTask = async () => {
     await fetch('http://localhost:3001/', {
@@ -32,6 +32,7 @@ function Home() {
       },
       body: JSON.stringify({
         task: inputTask,
+        status: taskStatus,
       }),
     });
     getTasks();
@@ -54,7 +55,6 @@ function Home() {
 
   return (
     <div>
-      { console.log(taskStatus)}
       { isLoading ? <h3>Loading...</h3>
       : 
         <>
@@ -63,7 +63,7 @@ function Home() {
               <input
                 type="text"
                 id="task-input"
-                placeholder="Type your task here"
+                placeholder="Escreva sua tarefa aqui..."
                 onChange={(e) => setInputTask(e.target.value)}
               />
             </label>
@@ -81,27 +81,34 @@ function Home() {
             </button>        
           </section>
           <section>
-            <ul>
-              { tasks.map((e) => (
-                <div key={e._id}>
-                  <li>{e.task}</li>
-                  <button
+            { tasks.length > 0 ? 
+              <ul>
+                { tasks.map((e) => (
+                  <div key={e._id}>
+                    <li>
+                      {e.task}
+                      <p>{e.status}</p>
+                    </li>
+                    <button
+                      type="button"
+                      id="edit-button"
+                      onClick={() => editTask(e._id)}
+                    >
+                      Edit task
+                    </button>
+                    <button
                     type="button"
-                    id="edit-button"
-                    onClick={() => editTask(e._id)}
-                  >
-                    Edit task
-                  </button>
-                  <button
-                  type="button"
-                  id="remove-button"
-                  onClick={() => removeTask(e._id)}
-                  >
-                    remove task
-                  </button>
-                </div>
-              ))}
-            </ul>
+                    id="remove-button"
+                    onClick={() => removeTask(e._id)}
+                    >
+                      remove task
+                    </button>
+                  </div>
+                ))}
+              </ul>
+            :
+              <h2>Nenhuma tarefa adicionada</h2> 
+            }
           </section>
         </>
       }
