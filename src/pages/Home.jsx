@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 function Home() {
+  const bdUrl = 'https://personaltaskslist-bk.herokuapp.com';
   const PENDING = 'Pendente';
   const IN_PROGRESS = 'Em Progresso';
   const DONE = 'Pronto';
@@ -11,7 +12,7 @@ function Home() {
 
   const getTasks = async () => {
     setIsLoading(true);
-    fetch('http://localhost:3001/')
+    fetch(bdUrl)
       .then(resp => resp.json())
       .then(data => {
         setTasks(data);
@@ -25,7 +26,7 @@ function Home() {
 
   const addTask = async () => {
     setIsLoading(true);
-    await fetch('http://localhost:3001/', {
+    await fetch(bdUrl, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -42,7 +43,7 @@ function Home() {
 
   const removeTask = async (id) => {
     setIsLoading(true);
-    await fetch(`http://localhost:3001/${id}`, {
+    await fetch(`bdUrl/${id}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
