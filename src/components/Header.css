@@ -1,0 +1,9 @@
+.title {
+  align-items: center;
+  color: rgb(255, 255, 255);
+  display: flex;
+  font-size: x-large;
+  justify-content: center;
+  padding: 3.5vh;
+  text-shadow: 2px 2px rgb(7, 7, 7);
+}
