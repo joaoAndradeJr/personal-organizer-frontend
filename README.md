@@ -16,7 +16,7 @@ Após a instalação das dependencias ainda no terminal digite: `npm start`.
 
 Para fazer alterações no projeto crie uma nova branch com o comando `git checkout -b $NOME_DA_BRANCH`
 
-###Deploy da aplicação
+#### Deploy da aplicação
 
 O deploy da aplicação foi feito no endereço `https://personaltaskslist.herokuapp.com/`
 
