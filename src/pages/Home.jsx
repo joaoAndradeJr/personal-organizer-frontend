@@ -6,6 +6,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import './Home.css';
 import fetchEditTask from '../helpers/fetchEditTask';
 import fetchAddTask from '../helpers/fetchAddTask';
+import fetchSaveEditedTask from '../helpers/fetchSaveEditedTask';
+import fetchRemoveTask from '../helpers/fetchRemovetask';
 
 function Home() {
   const bdUrl = 'https://personaltaskslist-bk.herokuapp.com';
@@ -20,7 +22,6 @@ function Home() {
 
   const getTasks = async () => {
     setIsLoading(true);
-    setIsEditing(false);
     fetch(bdUrl)
       .then(resp => resp.json())
       .then(data => {
@@ -42,13 +43,7 @@ function Home() {
 
   const removeTask = async (id) => {
     setIsLoading(true);
-    await fetch(`https://personaltaskslist-bk.herokuapp.com/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
+    await fetchRemoveTask(id);
     setIsLoading(false);
     getTasks();
   };
@@ -56,20 +51,10 @@ function Home() {
   const saveTask = async () => {
     const task = document.querySelector('#task-input').value;
     const status = document.querySelector('#task-status').value;
-    const id = document.querySelector('#task-id').innerText.substr(4, 24);
+    const id = document.querySelector('#task-id').innerText;
     setIsLoading(true);
-    await fetch(`https://personaltaskslist-bk.herokuapp.com/${id}`, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        task, status,
-      }),
-    });
-    
-    setIsEditing(true);
+    await fetchSaveEditedTask(id, task, status);
+    setIsEditing(false);
     setIsLoading(false);
     getTasks();
   };
@@ -77,15 +62,11 @@ function Home() {
   const editTask = async (id) => {
     setIsLoading(true);
     setIsEditing(true);
-    
     const task = await fetchEditTask(id);
-
     task.json().then((data) => {
       document.querySelector('#task-input').value = data.task;
       document.querySelector('#task-status').value = data.status;
     });
-    
-
     setIsLoading(false);
   };
 
@@ -141,7 +122,9 @@ function Home() {
             </Form>
           </section>
           <section className="task-list">
-            { tasks.length > 0 ? 
+            { tasks.length === 0 ? 
+              <h2>Nenhuma tarefa adicionada</h2> 
+              :
               <ListGroup as="ol">
                 { tasks.map((e, index) => (
                   <div key={e._id}>
@@ -149,7 +132,7 @@ function Home() {
                       as="li"
                       variant={index % 2 === 0 ? "primary" : "secondary"}
                     >
-                      <p id="task-id" hidden>id: {e._id}</p>
+                      <p id="task-id" hidden>{e._id}</p>
                       <h4>{e.task}</h4>
                       <p><i>{e.status}</i></p>
                       <Button
@@ -171,8 +154,6 @@ function Home() {
                   </div>
                 ))}
               </ListGroup>
-            :
-              <h2>Nenhuma tarefa adicionada</h2> 
             }
           </section>
         </>
