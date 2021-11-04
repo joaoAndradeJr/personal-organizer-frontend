@@ -3,11 +3,11 @@ import Header from '../components/Header';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import './Home.css';
 import fetchEditTask from '../helpers/fetchEditTask';
 import fetchAddTask from '../helpers/fetchAddTask';
 import fetchSaveEditedTask from '../helpers/fetchSaveEditedTask';
 import fetchRemoveTask from '../helpers/fetchRemovetask';
+import './Home.css';
 
 function Home() {
   const bdUrl = 'https://personaltaskslist-bk.herokuapp.com';
@@ -72,7 +72,7 @@ function Home() {
 
   return (
     <div>
-      { isLoading ? <h3>Loading...</h3>
+      { isLoading ? <h3>Carregando...</h3>
       : 
         <>
           <Header />
@@ -88,6 +88,7 @@ function Home() {
                     onChange={(e) => setInputTask(e.target.value)}
                   />
                 </Form.Label>
+                {'   '}
                 <Form.Label>
                   Selecione o status da tarefa:
                   <Form.Control
@@ -101,13 +102,15 @@ function Home() {
                     <option value={DONE}>{DONE}</option>
                   </Form.Control>
                 </Form.Label>
+                {'   '}
                 { isEditing ?
                   <Button
                     variant="outline-success"
+                    size="sm"
                     id="edit-task-button"
                     onClick={saveTask}
                   >
-                    Save task
+                    Salvar tarefa
                   </Button>  
                 :
                   <Button
@@ -115,7 +118,7 @@ function Home() {
                     id="add-task-button"
                     onClick={addTask}
                   >
-                    Add task
+                    Adicionar tarefa
                   </Button>
               }
               </Form.Group>
@@ -137,18 +140,20 @@ function Home() {
                       <p><i>{e.status}</i></p>
                       <Button
                         variant="success"
+                        size="sm"
                         id="edit-button"
                         onClick={() => editTask(e._id)}
                       >
-                        Edit task
+                        Editar tarefa
                       </Button>
                       {'  '}
                       <Button
                         variant="success"
+                        size="sm"
                         id="remove-button"
                         onClick={() => removeTask(e._id)}
                       >
-                        remove task
+                        Apagar tarefa
                       </Button>
                     </ListGroup.Item>
                   </div>
