@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-import { Form, Button, ListGroup } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import { Form, ListGroup, ListGroupItem } from 'react-bootstrap';
 import './Home.css';
 import fetchEditTask from '../helpers/fetchEditTask';
 
@@ -128,7 +129,7 @@ function Home() {
                 </Form.Label>
                 { isEditing ?
                   <Button
-                    variant="outline-primary"
+                    variant="outline-success"
                     id="edit-task-button"
                     onClick={saveTask}
                   >
@@ -136,7 +137,7 @@ function Home() {
                   </Button>  
                 :
                   <Button
-                    variant="outline-success"
+                    variant="success"
                     id="add-task-button"
                     onClick={addTask}
                   >
@@ -158,21 +159,22 @@ function Home() {
                       <p id="task-id"><i>id: {e._id}</i></p>
                       <h4>{e.task}</h4>
                       <p><i>{e.status}</i></p>
+                      <Button
+                        variant="success"
+                        id="edit-button"
+                        onClick={() => editTask(e._id)}
+                      >
+                        Edit task
+                      </Button>
+                      {'  '}
+                      <Button
+                        variant="success"
+                        id="remove-button"
+                        onClick={() => removeTask(e._id)}
+                      >
+                        remove task
+                      </Button>
                     </ListGroup.Item>
-                    <Button
-                      variant="outline-success"
-                      id="edit-button"
-                      onClick={() => editTask(e._id)}
-                    >
-                      Edit task
-                    </Button>
-                    <Button
-                      variant="outline-success"
-                      id="remove-button"
-                      onClick={() => removeTask(e._id)}
-                    >
-                      remove task
-                    </Button>
                   </div>
                 ))}
               </ListGroup>
