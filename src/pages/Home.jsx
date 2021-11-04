@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Button from 'react-bootstrap/Button';
-import { Form, ListGroup, ListGroupItem } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+import ListGroup from 'react-bootstrap/ListGroup';
 import './Home.css';
 import fetchEditTask from '../helpers/fetchEditTask';
+import fetchAddTask from '../helpers/fetchAddTask';
 
 function Home() {
   const bdUrl = 'https://personaltaskslist-bk.herokuapp.com';
@@ -18,6 +20,7 @@ function Home() {
 
   const getTasks = async () => {
     setIsLoading(true);
+    setIsEditing(false);
     fetch(bdUrl)
       .then(resp => resp.json())
       .then(data => {
@@ -32,17 +35,7 @@ function Home() {
 
   const addTask = async () => {
     setIsLoading(true);
-    await fetch(bdUrl, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        task: inputTask,
-        status: taskStatus,
-      }),
-    });
+    await fetchAddTask(inputTask, taskStatus);
     setIsLoading(false);
     getTasks();
   };
@@ -156,7 +149,7 @@ function Home() {
                       as="li"
                       variant={index % 2 === 0 ? "primary" : "secondary"}
                     >
-                      <p id="task-id"><i>id: {e._id}</i></p>
+                      <p id="task-id" hidden>id: {e._id}</p>
                       <h4>{e.task}</h4>
                       <p><i>{e.status}</i></p>
                       <Button
