@@ -85,7 +85,7 @@ function Home() {
     setIsEditing(true);
     
     const task = await fetchEditTask(id);
-    
+
     task.json().then((data) => {
       document.querySelector('#task-input').value = data.task;
       document.querySelector('#task-status').value = data.status;
@@ -148,10 +148,13 @@ function Home() {
           </section>
           <section className="task-list">
             { tasks.length > 0 ? 
-              <ListGroup>
-                { tasks.map((e) => (
+              <ListGroup as="ol">
+                { tasks.map((e, index) => (
                   <div key={e._id}>
-                    <ListGroup.Item>
+                    <ListGroup.Item
+                      as="li"
+                      variant={index % 2 === 0 ? "primary" : "secondary"}
+                    >
                       <p id="task-id"><i>id: {e._id}</i></p>
                       <h4>{e.task}</h4>
                       <p><i>{e.status}</i></p>
