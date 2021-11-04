@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import Header from '../components/Header';
+import { Form, Button, ListGroup } from 'react-bootstrap';
+import './Home.css';
+import fetchEditTask from '../helpers/fetchEditTask';
 
 function Home() {
   const bdUrl = 'https://personaltaskslist-bk.herokuapp.com';
@@ -81,14 +83,9 @@ function Home() {
   const editTask = async (id) => {
     setIsLoading(true);
     setIsEditing(true);
-    const task = await fetch(`https://personaltaskslist-bk.herokuapp.com/${id}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-
+    
+    const task = await fetchEditTask(id);
+    
     task.json().then((data) => {
       document.querySelector('#task-input').value = data.task;
       document.querySelector('#task-status').value = data.status;
@@ -103,8 +100,9 @@ function Home() {
       { isLoading ? <h3>Loading...</h3>
       : 
         <>
+          <Header />
           <section>
-            <Form>
+            <Form className="task-form">
               <Form.Group className="mb-3">
                 <Form.Label>
                   Digite a tarefa:
@@ -123,9 +121,9 @@ function Home() {
                     value={taskStatus}
                     onChange={(e) => setTaskStatus(e.target.value)}
                   >
-                    <option value={PENDING}>Pendente</option>
-                    <option value={IN_PROGRESS}>Em Andamento</option>
-                    <option value={DONE}>Pronto</option>
+                    <option value={PENDING}>{PENDING}</option>
+                    <option value={IN_PROGRESS}>{IN_PROGRESS}</option>
+                    <option value={DONE}>{DONE}</option>
                   </Form.Control>
                 </Form.Label>
                 { isEditing ?
@@ -148,33 +146,33 @@ function Home() {
               </Form.Group>
             </Form>
           </section>
-          <section>
+          <section className="task-list">
             { tasks.length > 0 ? 
-              <ul>
+              <ListGroup>
                 { tasks.map((e) => (
                   <div key={e._id}>
-                    <li>
-                      <p id="task-id">id: {e._id}</p>
-                      {e.task}
+                    <ListGroup.Item>
+                      <p id="task-id"><i>id: {e._id}</i></p>
+                      <h4>{e.task}</h4>
                       <p><i>{e.status}</i></p>
-                    </li>
-                    <button
-                      type="button"
+                    </ListGroup.Item>
+                    <Button
+                      variant="outline-success"
                       id="edit-button"
                       onClick={() => editTask(e._id)}
                     >
                       Edit task
-                    </button>
-                    <button
-                    type="button"
-                    id="remove-button"
-                    onClick={() => removeTask(e._id)}
+                    </Button>
+                    <Button
+                      variant="outline-success"
+                      id="remove-button"
+                      onClick={() => removeTask(e._id)}
                     >
                       remove task
-                    </button>
+                    </Button>
                   </div>
                 ))}
-              </ul>
+              </ListGroup>
             :
               <h2>Nenhuma tarefa adicionada</h2> 
             }

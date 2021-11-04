@@ -1,0 +1,7 @@
+.title {
+  align-items: center;
+  color: blue;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 0.5vh;
+}
