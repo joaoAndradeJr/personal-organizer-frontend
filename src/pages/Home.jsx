@@ -8,7 +8,8 @@ function Home() {
   const [inputTask, setInputTask] = useState('');
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [taskStatus, setTaskStatus] = useState(PENDING)
+  const [taskStatus, setTaskStatus] = useState(PENDING);
+  const [isEditing, setIsEditing] = useState(false);
 
   const getTasks = async () => {
     setIsLoading(true);
@@ -54,8 +55,45 @@ function Home() {
     getTasks();
   };
 
-  const editTask = (id) => {
-    console.log('edita tarefa ', id)
+  const saveTask = async () => {
+    const task = document.querySelector('#task-input').value;
+    const status = document.querySelector('#task-status').value;
+    const id = document.querySelector('#task-id').innerText.substr(4, 24);
+    setIsLoading(true);
+    await fetch(`http://localhost:3001/${id}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        task, status,
+      }),
+    });
+    
+    setIsEditing(true);
+    setIsLoading(false);
+    getTasks();
+  };
+
+  const editTask = async (id) => {
+    setIsLoading(true);
+    setIsEditing(true);
+    const task = await fetch(`http://localhost:3001/${id}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+
+    task.json().then((data) => {
+      document.querySelector('#task-input').value = data.task;
+      document.querySelector('#task-status').value = data.status;
+    });
+    
+
+    setIsLoading(false);
   };
 
   return (
@@ -77,13 +115,23 @@ function Home() {
               <option value={IN_PROGRESS}>Em Andamento</option>
               <option value={DONE}>Pronto</option>
             </select>
-            <button
-              type="button"
-              id="add-task-button"
-              onClick={addTask}
-            >
-              Add task
-            </button>        
+            { isEditing ?
+                <button
+                type="button"
+                id="edit-task-button"
+                onClick={saveTask}
+                >
+                  Save task
+                </button>  
+              :
+                <button
+                  type="button"
+                  id="add-task-button"
+                  onClick={addTask}
+                >
+                  Add task
+                </button>
+            }
           </section>
           <section>
             { tasks.length > 0 ? 
@@ -91,6 +139,7 @@ function Home() {
                 { tasks.map((e) => (
                   <div key={e._id}>
                     <li>
+                      <p id="task-id">id: {e._id}</p>
                       {e.task}
                       <p><i>{e.status}</i></p>
                     </li>
