@@ -133,7 +133,7 @@ function Home() {
                   <div key={e._id}>
                     <ListGroup.Item
                       as="li"
-                      variant={index % 2 === 0 ? "primary" : "secondary"}
+                      variant={index % 2 === 0 ? 'primary' : 'secondary'}
                     >
                       <p id="task-id" hidden>{e._id}</p>
                       <h4>{e.task}</h4>

@@ -8,4 +8,4 @@ export default async function task (id) {
   });
 
   return taskResponse;
-};
+}

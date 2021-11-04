@@ -21,6 +21,6 @@
 		"eqeqeq": "off",
 		"curly": "error",
 		"semi": ["error", "always"],
-		"quotes": ["error", "simple"]
+		"quotes": ["error", "single"]
 	}
 }
