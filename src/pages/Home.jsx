@@ -70,6 +70,21 @@ function Home() {
     setIsLoading(false);
   };
 
+  const sortTasks = async (sortBy) => {
+    setIsLoading(true);
+    const sortedTasks = await fetch(`https://personaltaskslist-bk.herokuapp.com/sort/${sortBy}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    sortedTasks.json().then((data) => {
+      setTasks(data);
+    });
+    setIsLoading(false);
+  };
+
   return (
     <div>
       { isLoading ? <h3>Carregando...</h3>
@@ -80,7 +95,7 @@ function Home() {
             <Form className="task-form">
               <Form.Group className="mb-3">
                 <Form.Label>
-                  Digite a tarefa:
+                  {isEditing ? 'Edite sua tarefa:' : 'Digite a tarefa'}
                   <Form.Control
                     id="task-input"
                     type="text"
@@ -90,7 +105,7 @@ function Home() {
                 </Form.Label>
                 {'   '}
                 <Form.Label>
-                  Selecione o status da tarefa:
+                  {isEditing ? 'Edite o status da tarefa' : 'Selecione o status da tarefa:'}
                   <Form.Control
                     as="select"
                     id="task-status"
@@ -105,7 +120,7 @@ function Home() {
                 {'   '}
                 { isEditing ?
                   <Button
-                    variant="outline-success"
+                    variant="primary"
                     size="sm"
                     id="edit-task-button"
                     onClick={saveTask}
@@ -120,7 +135,34 @@ function Home() {
                   >
                     Adicionar tarefa
                   </Button>
-              }
+                }
+                <div className="mb-3">
+                  <h4>Ordernar por:</h4>
+                  <Form.Check
+                    inline
+                    type="radio"
+                    name="order-by"
+                    id="alphabetic"
+                    label="Ordem alfabérica"
+                    onClick={(e) => sortTasks(e.target.id)}
+                  />
+                  <Form.Check 
+                    inline
+                    type="radio"
+                    name="order-by"
+                    id="date"
+                    label="Data da criação"
+                    onClick={(e) => console.log(e.target.id)}
+                  />
+                  <Form.Check 
+                    inline
+                    type="radio"
+                    name="order-by"
+                    id="status"
+                    label="Status"
+                    onClick={(e) => console.log(e.target.id)}
+                  />
+                </div>
               </Form.Group>
             </Form>
           </section>
